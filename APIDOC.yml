@@ -59,11 +59,17 @@
   ##发送内容##
   {
     "type": "userCode", #请求类型
-    "token": "xxx" #token，绑定用户的userID
+    "token": "xxx", #token，绑定用户的userID
+    "getAsList": "true" #是否以List的形式获取数据，可选参数，默认false
   }
   ##接收内容##
+  #getAsList为false
   {
     "status": "200", #返回码
+    "codeList": [ #穿透码key列表
+      "1",
+      "2"
+    ],
     "codeData": { #返回的穿透码列表，为JSON形式
       "1": { #数据编号，一般从1开始，顺序向下排，便于读取
         "node": "xxx", #节点编号
@@ -95,11 +101,51 @@
       }
     }
   }
+  #getAsList为true
+  {
+    "status": "200", #返回码
+    "codeData": [ #返回的穿透码列表，为JSON形式
+      { #数据编号，一般从1开始，顺序向下排，便于读取
+        "node": "xxx", #节点编号
+        "number": "xxx", #穿透码编号，用于操作穿透码
+        "code": "xxx", #穿透码
+        "activity": "xxx", #是否为活动穿透码（是的话无法删除）
+        "stop": "xxx", #到期时间
+        "port": "xxx", #服务端口，可用端口为顺序后9个
+        "start": "xxx", #创建时间
+        "warning": "xxx", #是否发送到期警告
+        "ID": "xxx", #穿透码编号，仅为区分穿透码使用
+        "band": "xxx", #带宽，单位Mbps
+        "user": "xxx", #用户userID
+        "status": "xxx" #穿透码状态，run为正常运行，outdated为到期，banned为封禁
+      },  #下面同上，只是表现多个穿透码时候的数据结构
+      {
+        "node": "xxx",
+        "number": "xxx",
+        "code": "xxx",
+        "activity": "xxx",
+        "stop": "xxx",
+        "port": "xxx",
+        "start": "xxx",
+        "warning": "xxx",
+        "ID": "xxx",
+        "band": "xxx",
+        "user": "xxx",
+        "status": "xxx"
+      }
+    ]
+  }
   ##参考用法##
   #http://[API地址]/API?type=userCode&token=1fe470d6-33dc-4e97-81b4-937be4a15bf1
+  #http://[API地址]/API?type=userCode&token=1fe470d6-33dc-4e97-81b4-937be4a15bf1&getAsList=true
   ##参考返回##
+  #getAsList为false
   {
     "status": "200",
+    "codeList": [
+      "1",
+      "2"
+    ],
     "codeData": {
       "1": {
         "node": "test",
@@ -131,6 +177,40 @@
       }
     }
   }
+  #getAsList为true
+  {
+    "status": "200",
+    "codeData": [
+      {
+        "node": "test",
+        "number": "1234567",
+        "code": "4test6666666666666666",
+        "activity": "false",
+        "stop": "1966173815000",
+        "port": "40960",
+        "start": "1637661815000",
+        "warning": "false",
+        "ID": "69",
+        "band": "5",
+        "user": "10000000",
+        "status": "run"
+      },
+      {
+        "node": "sq3",
+        "number": "8910111",
+        "code": "3sq666666666666666666",
+        "activity": "false",
+        "stop": "1668595157748",
+        "port": "59410",
+        "start": "1664620757746",
+        "warning": "false",
+        "ID": "4697",
+        "band": "30",
+        "user": "10000000",
+        "status": "run"
+      }
+    ]
+  }
 
 ########################################
 
@@ -142,13 +222,20 @@
   ##发送内容##
   {
     "type": "userCode", #请求类型
-    "token": "xxx" #token，绑定用户的userID
+    "token": "xxx", #token，绑定用户的userID
+    "getAsList": "true" #是否以List的形式获取数据，可选参数，默认false
   }
   ##接收内容##
+  #getAsList为false
   {
     "status": "200", #返回码
+    "nodeList": [ #节点列表
+      "ab1",
+      "ab2"
+    ],
     "nodeData": {
       "ab1": { #节点编号
+        "node": "ab1", #节点编号
         "address": "xxx", #地区以及网络类型
         "activity": "xxx", #是否为活动节点（活动节点所创建/续期/升配的穿透码都会变成活动穿透码）
         "load": "xxx%", #节点负载（只有一个的话，就说明是旧版节点，只显示理论负载）
@@ -159,6 +246,7 @@
         "info": "xxx" #节点信息或备注
       }, #下面同上，只是表现返回多个节点时候的数据结构
       "ab2": {
+        "node": "ab2",
         "address": "xxx",
         "activity": "xxx",
         "load": "xxx% | xxx%", #这里后面那个是实际上行带宽负载
@@ -170,11 +258,45 @@
       }
     }
   }
+  #getAsList为true
+  {
+    "status": "200", #返回码
+    "nodeData": [
+      { #节点编号
+        "node": "ab1", #节点编号
+        "address": "xxx", #地区以及网络类型
+        "activity": "xxx", #是否为活动节点（活动节点所创建/续期/升配的穿透码都会变成活动穿透码）
+        "load": "xxx%", #节点负载（只有一个的话，就说明是旧版节点，只显示理论负载）
+        "enable": "xxx", #此节点是否可用
+        "price": "xxx", #价格，单位见coin
+        "band-max-per": "xxx", #单穿透码最高带宽，不代表节点实际最大带宽
+        "coin": "xxx", #购买类型（gold是只能金币购买，silver是只能银币购买，mixed是都可以）
+        "info": "xxx" #节点信息或备注
+      },
+      {
+        "node": "ab2",
+        "address": "xxx",
+        "activity": "xxx",
+        "load": "xxx% | xxx%", #这里后面那个是实际上行带宽负载
+        "enable": "xxx",
+        "price": "xxx",
+        "band-max-per": "xxx",
+        "coin": "xxx",
+        "info": "xxx"
+      }
+    ]
+  }
   ##参考用法##
   #http://[API地址]/API?type=allNode&token=1ccb96bb-16d1-4d81-bb89-358aa6a8edc0
+  #http://[API地址]/API?type=allNode&token=1ccb96bb-16d1-4d81-bb89-358aa6a8edc0&getAsList=true
   ##参考返回##
+  #getAsList为false
   {
     "status":"200",
+    "nodeList": [ #节点列表
+      "sh6",
+      "sh5"
+    ],
     "nodeData": {
       "sh6": {
         "address": "上海腾讯云",
@@ -197,6 +319,32 @@
         "info": "赞助By-阳阳，本节点不允许建站，禁止v2/ss/trojan/clash以及搭建订阅网站"
       }
     }
+  }
+  #getAsList为true
+  {
+    "status": "200",
+    "nodeData": [
+      {
+        "address": "上海腾讯云",
+        "activity": "false",
+        "load": "0.00%",
+        "enable": "true",
+        "price": "37",
+        "band-max-per": "10",
+        "coin": "gold",
+        "info": "赞助By-misaka，本节点禁止建站/websocket，禁止v2/ss/trojan/clash以及搭建订阅网站"
+      },
+      {
+        "address": "上海电信单线",
+        "activity": "false",
+        "load": "16.00% | 0.10%",
+        "enable": "true",
+        "price": "36",
+        "band-max-per": "30",
+        "coin": "mixed",
+        "info": "赞助By-阳阳，本节点不允许建站，禁止v2/ss/trojan/clash以及搭建订阅网站"
+      }
+    ]
   }
 
 ########################################
