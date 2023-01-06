@@ -237,9 +237,9 @@
       "ab1": { #节点编号
         "node": "ab1", #节点编号
         "address": "xxx", #地区以及网络类型
+        "name": "ab1-xxx", #节点显示名称
         "activity": "xxx", #是否为活动节点（活动节点所创建/续期/升配的穿透码都会变成活动穿透码）
         "load": "xxx%", #节点负载（只有一个的话，就说明是旧版节点，只显示理论负载）
-        "enable": "xxx", #此节点是否可用
         "price": "xxx", #价格，单位见coin
         "band-max-per": "xxx", #单穿透码最高带宽，不代表节点实际最大带宽
         "coin": "xxx", #购买类型（gold是只能金币购买，silver是只能银币购买，mixed是都可以）
@@ -248,9 +248,9 @@
       "ab2": {
         "node": "ab2",
         "address": "xxx",
+        "name": "ab2-xxx",
         "activity": "xxx",
         "load": "xxx% | xxx%", #这里后面那个是实际上行带宽负载
-        "enable": "xxx",
         "price": "xxx",
         "band-max-per": "xxx",
         "coin": "xxx",
@@ -265,9 +265,9 @@
       { #节点编号
         "node": "ab1", #节点编号
         "address": "xxx", #地区以及网络类型
+        "name": "ab1-xxx",
         "activity": "xxx", #是否为活动节点（活动节点所创建/续期/升配的穿透码都会变成活动穿透码）
         "load": "xxx%", #节点负载（只有一个的话，就说明是旧版节点，只显示理论负载）
-        "enable": "xxx", #此节点是否可用
         "price": "xxx", #价格，单位见coin
         "band-max-per": "xxx", #单穿透码最高带宽，不代表节点实际最大带宽
         "coin": "xxx", #购买类型（gold是只能金币购买，silver是只能银币购买，mixed是都可以）
@@ -276,9 +276,9 @@
       {
         "node": "ab2",
         "address": "xxx",
+        "name": "ab2-xxx",
         "activity": "xxx",
         "load": "xxx% | xxx%", #这里后面那个是实际上行带宽负载
-        "enable": "xxx",
         "price": "xxx",
         "band-max-per": "xxx",
         "coin": "xxx",
@@ -299,7 +299,9 @@
     ],
     "nodeData": {
       "sh6": {
+        "node": "sh6",
         "address": "上海腾讯云",
+        "name": "sh6-上海腾讯云",
         "activity": "false",
         "load": "0.00%",
         "enable": "true",
@@ -309,7 +311,9 @@
         "info": "赞助By-misaka，本节点禁止建站/websocket，禁止v2/ss/trojan/clash以及搭建订阅网站"
       },
       "sh5": {
+        "node": "sh5",
         "address": "上海电信单线",
+        "name": "sh5-上海电信单线",
         "activity": "false",
         "load": "16.00% | 0.10%",
         "enable": "true",
@@ -325,7 +329,9 @@
     "status": "200",
     "nodeData": [
       {
+        "node": "sh5",
         "address": "上海腾讯云",
+        "name": "sh6-上海腾讯云",
         "activity": "false",
         "load": "0.00%",
         "enable": "true",
@@ -335,7 +341,9 @@
         "info": "赞助By-misaka，本节点禁止建站/websocket，禁止v2/ss/trojan/clash以及搭建订阅网站"
       },
       {
+        "node": "sh5",
         "address": "上海电信单线",
+        "name": "sh5-上海电信单线",
         "activity": "false",
         "load": "16.00% | 0.10%",
         "enable": "true",
@@ -508,6 +516,7 @@
       "username": "xxx", #用户名称
       "email": "xxx", #邮箱
       "qq": "xxx", #QQ，可能为null
+      "signIn": "xxx", #用户是否签到，布尔值
       "level": "xxx", #用户等级（admin站长、staff管理员、provider节点提供者、default普通用户、banned封禁用户）
       "gold": "xxx", #金币数量
       "silver": "xxx" #银币数量
@@ -523,6 +532,7 @@
       "username": "墨守MossCG",
       "email": "1292141077@qq.com",
       "qq": "1292141077",
+      "signIn": "true",
       "level": "admin",
       "gold": "10000",
       "silver": "100000"
@@ -587,6 +597,153 @@
     "status": "200",
     "coin": "120",
     "type": "MIXED"
+  }
+
+########################################
+
+  ###forgetPassword忘记密码请求###
+  #需要先发送verification请求向邮箱发送验证码才可以修改密码
+  #此方法为敏感方法，发现异常会被立刻阻断，客户端需要自备人机验证，API后续开发会提供人机验证
+  #注意，此方法是验证码通过在前，信息检查在后，故一旦信息不合法，需要获取新的验证码（冷却不重置）
+  ##特殊返回码##
+  #"403" 信息有误，详见message参数
+  #"404" 验证码错误
+  ##发送内容##
+  {
+    "type": "forgetPassword", #请求类型
+    "email": "xxx", #用户的邮箱
+    "password": "xxx", #用户新密码
+    "code": "xxx" #发送verification请求后获得的验证码，verification请求的key参数：forgetPassword
+  }
+  ##接收内容##
+  {
+    "status": "200" #返回码
+  }
+  ##参考用法##
+  #http://[API地址]/API?type=forgetPassword&email=1292141077@qq.com&code=ABC123&password=www123www
+  ##参考返回##
+  {
+    "status": "200"
+  }
+
+########################################
+
+  ###statistic统计信息请求###
+  #会返回一些实时的统计信息
+  ##特殊返回码##
+  #无
+  ##发送内容##
+  {
+    "type": "statistic", #请求类型
+    "token": "xxx" #token，绑定用户的userID
+  }
+  ##接收内容##
+  {
+    "userCount": "xxx", #MossFrp用户总数
+    "codeCount": "xxx", #MossFrp在线隧道总数
+    "nodeCount": "xxx", #MossFrp可用节点总数
+    "signInCount": "xxx", #MossFrp今日签到总数
+    "userCodeCount": "xxx", #该用户在线穿透码总数
+    "status": "200" #返回码
+  }
+  ##参考用法##
+  #http://[API地址]/API?type=statistic&token=1ccb96bb-16d1-4d81-bb89-358aa6a8edc0
+  ##参考返回##
+  {
+    "userCount": "3101",
+    "codeCount": "227",
+    "nodeCount": "16",
+    "signInCount": "304",
+    "userCodeCount": "3",
+    "status": "200"
+  }
+
+########################################
+
+  ###luck今日人品请求###
+  #返回用户的今日人品
+  ##特殊返回码##
+  #无
+  ##发送内容##
+  {
+    "type": "luck", #请求类型
+    "token": "xxx" #token，绑定用户的userID
+  }
+  ##接收内容##
+  {
+    "first": "xxx", #是否用户今日第一次获取今日人品，布尔值
+    "luck": "xxx", #用户今日人品数值
+    "luckMessage": "xxx", #用户今日人品信息
+    "status": "200" #返回码
+  }
+  ##参考用法##
+  #http://[API地址]/API?type=luck&token=1ccb96bb-16d1-4d81-bb89-358aa6a8edc0
+  ##参考返回##
+  {
+    "first": "true",
+    "luck": "100",
+    "luckMessage": "欧皇出现辣~斯哈斯哈斯哈（吸欧气.gif）",
+    "status": "200"
+  }
+
+########################################
+
+  ###signIn签到请求###
+  #返回用户的签到数据
+  ##特殊返回码##
+  #无
+  ##发送内容##
+  {
+    "type": "signIn", #请求类型
+    "token": "xxx" #token，绑定用户的userID
+  }
+  ##接收内容##
+  {
+    "first": "xxx", #是否用户今日第一次签到，布尔值
+    "luck": "xxx", #用户今日人品数值
+    "luckMessage": "xxx", #用户今日人品信息
+    "coin": "xxx", #用户签到获取的银币
+    "signInMessage": "xxx", #用户签到的返回信息
+    "status": "200" #返回码
+  }
+  ##参考用法##
+  #http://[API地址]/API?type=signIn&token=1ccb96bb-16d1-4d81-bb89-358aa6a8edc0
+  ##参考返回##
+  {
+    "first": "true",
+    "luck": "100",
+    "luckMessage": "欧皇出现辣~斯哈斯哈斯哈（吸欧气.gif）",
+    "coin": "128",
+    "signInMessage": "今日签到成功！\r\n获得了128枚银币！",
+    "status": "200"
+  }
+
+########################################
+
+  ###cardUse卡密使用请求###
+  #使用卡密
+  #此方法为敏感方法，使用错误的卡密会计入三次BadRequest
+  ##特殊返回码##
+  #无
+  ##发送内容##
+  {
+    "type": "cardUse", #请求类型
+    "card": "xxx", #卡密
+    "token": "xxx" #token，绑定用户的userID
+  }
+  ##接收内容##
+  {
+    "success": "xxx", #是否使用成功，布尔值
+    "message": "xxx", #对应返回信息，可直接显示输出
+    "status": "200" #返回码
+  }
+  ##参考用法##
+  #http://[API地址]/API?type=cardUse&card=94YK1X1JP4IGB22G&token=1ccb96bb-16d1-4d81-bb89-358aa6a8edc0
+  ##参考返回##
+  {
+    "success": "true",
+    "message": "使用成功！你获得了100银币",
+    "status": "200"
   }
 
 ########################################
